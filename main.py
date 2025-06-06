@@ -711,7 +711,7 @@ async def get_cpwp_course_content(session: aiohttp.ClientSession, headers: Dict[
                         identifier = url_val.split('/')[-2]
                         url_val = f'https://media-cdn.classplusapp.com/tencent/{identifier}/master.m3u8'
                     elif "4b06bf8d61c41f8310af9b2624459378203740932b456b07fcf817b737fbae27" in url_val and url_val.endswith('.jpeg'):
-                        url_val = f'https://media-cdn.classplusapp.com/alisg-cdn-a.classplusapp.com/b08bad9ff8d969639b2e43d5769342cc62b510c4345d2f7f153bec53be84fe35/{url_val.split('/')[-1].split('.')[0]}/master.m3u8'
+                        pass  # removed broken f-string
                     elif "cpvideocdn.testbook.com" in url_val and url_val.endswith('.png'):
                         match = re.search(r'/streams/([a-f0-9]{24})/', url_val)
                         video_id = match.group(1) if match else url_val.split('/')[-2]
@@ -920,11 +920,9 @@ async def process_cpwp(bot: Client, m: Message, user_id: int):
                                                     caption = (
                                                         f"**App Name :** `{App_Name} ({org_code})`\n"
                                                         f"**Batch Name :** `{selected_batch_name}`\n"
-                                                        f"**🎬 :** {video_count} | **📁 :** {pdf_count} | **🖼 :** {image_count}\n"
+                                                        f"**Videos :** {video_count} | **PDFs :** {pdf_count} | **Images :** {image_count}\n"
                                                         f"**Time Taken :** {formatted_time}"
                                                     )
-Batch Name : `{selected_batch_name}``
-🎬 : {video_count} | 📁 : {pdf_count} | 🖼  : {image_count}``
 
                                                     with open(file, 'rb') as f:
                                                         await m.reply_document(document=f, caption=caption, file_name=f"{clean_batch_name}.txt")
@@ -1037,14 +1035,14 @@ Batch Name : `{selected_batch_name}``
                                                 formatted_time = f"{minutes} minutes {seconds} seconds"
 
                                             await editable.delete(True)
-                                        
-                                                    caption = (
-                                                        f"**App Name :** `{App_Name} ({org_code})`\n"
-                                                        f"**Batch Name :** `{selected_batch_name}`\n"
-                                                        f"**🎬 :** {video_count} | **📁 :** {pdf_count} | **🖼 :** {image_count}\n"
-                                                        f"**Time Taken :** {formatted_time}"
-                                                    )
-                                        
+                                            
+                                            caption = (
+                                            f"**App Name :** `{App_Name} ({org_code})`\n"
+                                            f"**Batch Name :** `{selected_batch_name}`\n"
+                                            f"**Videos :** {video_count} | **PDFs :** {pdf_count} | **Images :** {image_count}\n"
+                                            f"**Time Taken :** {formatted_time}"
+                                            )
+                                            
                                             with open(file, 'rb') as f:
                                                 doc = await m.reply_document(document=f, caption=caption, file_name=f"{clean_batch_name}.txt")
 
