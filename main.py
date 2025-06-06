@@ -445,7 +445,7 @@ async def process_pwwp(bot: Client, m: Message, user_id: int):
                     response.raise_for_status()
                     batches = (await response.json()).get("data", [])
             except Exception as e:
-                await editable.edit("**```\nLogin Failed❗TOKEN IS EXPIRED```\nPlease Enter Working Token\n                       OR\nLogin With Phone Number**")
+                await editable.edit("**`Login Failed❗TOKEN IS EXPIRED`Please Enter Working Token\n                       OR\nLogin With Phone Number**")
                 return
         
             await editable.edit("**Enter Your Batch Name**")
@@ -465,7 +465,7 @@ async def process_pwwp(bot: Client, m: Message, user_id: int):
                 text = ''
                 for cnt, course in enumerate(courses):
                     name = course['name']
-                    text += f"{cnt + 1}. ```\n{name}```\n"
+                    text += f"{cnt + 1}. `{name}`"
                 await editable.edit(f"**Send index number of the course to download.\n\n{text}\n\nIf Your Batch Not Listed Above Enter - No**")
             
                 try:
@@ -490,7 +490,7 @@ async def process_pwwp(bot: Client, m: Message, user_id: int):
                         text = ''
                         for cnt, course in enumerate(courses):
                             name = course['batch_name']
-                            text += f"{cnt + 1}. ```\n{name}```\n"
+                            text += f"{cnt + 1}. `{name}`"
                             
                         await editable.edit(f"**Send index number of the course to download.\n\n{text}**")
                 
@@ -514,7 +514,7 @@ async def process_pwwp(bot: Client, m: Message, user_id: int):
                 else:
                     raise Exception("Invalid batch index.")
                     
-                await editable.edit("1.```\nFull Batch```\n2.```\nToday's Class```\n3.```\nKhazana```")
+                await editable.edit("1.`Full Batch`2.`Today's Class`3.`Khazana`")
                     
                 try:
                     input6 = await bot.listen(chat_id=m.chat.id, filters=filters.user(user_id), timeout=120)
@@ -859,7 +859,7 @@ async def process_cpwp(bot: Client, m: Message, user_id: int):
                                 for cnt, course in enumerate(courses):
                                     name = course['name']
                                     price = course['finalPrice']
-                                    text += f'{cnt + 1}. ```\n{name} 💵₹{price}```\n'
+                                    text += f'{cnt + 1}. `{name} 💵₹{price}`'
 
                                 await editable.edit(f"**Send index number of the Category Name\n\n{text}\nIf Your Batch Not Listed Then Enter Your Batch Name**")
                             
@@ -923,8 +923,8 @@ async def process_cpwp(bot: Client, m: Message, user_id: int):
                                                         f"**🎬 :** {video_count} | **📁 :** {pdf_count} | **🖼 :** {image_count}\n"
                                                         f"**Time Taken :** {formatted_time}"
                                                     )
-Batch Name : ```\n{selected_batch_name}``````
-🎬 : {video_count} | 📁 : {pdf_count} | 🖼  : {image_count}``````
+Batch Name : `{selected_batch_name}``
+🎬 : {video_count} | 📁 : {pdf_count} | 🖼  : {image_count}``
 
                                                     with open(file, 'rb') as f:
                                                         await m.reply_document(document=f, caption=caption, file_name=f"{clean_batch_name}.txt")
@@ -958,7 +958,7 @@ Batch Name : ```\n{selected_batch_name}``````
                                                 for cnt, course in enumerate(courses):
                                                     name = course['name']
                                                     price = course['finalPrice']
-                                                    text += f'{cnt + 1}. ```\n{name} 💵₹{price}```\n'
+                                                    text += f'{cnt + 1}. `{name} 💵₹{price}`'
                                                 await editable.edit(f"**Send index number of the Batch to download.\n\n{text}**")
                                             
                                                 try:
