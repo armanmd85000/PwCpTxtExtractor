@@ -879,6 +879,61 @@ async def process_cpwp(bot: Client, m: Message, user_id: int):
                                         logging.error(f"Failed to send error message to user : {e}")
                                     return
 
+                                
+                                if input2.text.strip() == "0":
+                                    for course in courses:
+                                        selected_batch_id = course['id']
+                                        selected_batch_name = course['name']
+                                        price = course['finalPrice']
+                                        clean_batch_name = selected_batch_name.replace("/", "-").replace("|", "-")
+                                        clean_file_name = f"{user_id}_{clean_batch_name}"
+
+                                        batch_headers = {
+                                            'Accept': 'application/json, text/plain, */*',
+                                            'region': 'IN',
+                                            'accept-language': 'EN',
+                                            'Api-Version': '22',
+                                            'tutorWebsiteDomain': f'https://{org_code}.courses.store'
+                                        }
+
+                                        params = {'courseId': f'{selected_batch_id}'}
+                                        async with session.get(f"https://api.classplusapp.com/v2/course/preview/org/info", params=params, headers=batch_headers) as response:
+                                            if response.status == 200:
+                                                res_json = await response.json()
+                                                Batch_Token = res_json['data']['hash']
+                                                App_Name = res_json['data']['name']
+
+                                                await editable.edit(f"**Extracting course : {selected_batch_name} ...**")
+                                                start_time = time.time()
+                                                course_content, video_count, pdf_count, image_count = await get_cpwp_course_content(session, headers, Batch_Token)
+
+                                                if course_content:
+                                                    file = f"{clean_file_name}.txt"
+                                                    with open(file, 'w') as f:
+                                                        f.write(''.join(course_content))
+
+                                                    end_time = time.time()
+                                                    response_time = end_time - start_time
+                                                    minutes = int(response_time // 60)
+                                                    seconds = int(response_time % 60)
+                                                    formatted_time = f"{minutes} minutes {seconds} seconds" if minutes else f"{seconds} seconds"
+
+                                                    caption = f"**App Name : ```\n{App_Name}({org_code})```
+Batch Name : ```\n{selected_batch_name}``````
+🎬 : {video_count} | 📁 : {pdf_count} | 🖼  : {image_count}``````
+Time Taken : {formatted_time}```**"
+
+                                                    with open(file, 'rb') as f:
+                                                        await m.reply_document(document=f, caption=caption, file_name=f"{clean_batch_name}.txt")
+                                                    os.remove(file)
+                                                else:
+                                                    await m.reply_text(f"❌ No content found for {selected_batch_name}")
+                                            else:
+                                                await m.reply_text(f"❌ Failed to get Batch Token for {selected_batch_name}")
+
+                                    await editable.delete(True)
+                                    return
+
                                 if input2.text.isdigit() and len(input2.text) <= len(courses):
                                     selected_course_index = int(input2.text.strip())
                                     course = courses[selected_course_index - 1]
